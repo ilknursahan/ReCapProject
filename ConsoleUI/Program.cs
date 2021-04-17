@@ -10,16 +10,54 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            CarManager carManager = new CarManager(new EfCarDal());
+            CarList();
 
-          
-            var c = new Car { BrandId = 1, ColorId = 1, ModelYear = "2001", DailyPrice = 800, Description = "Dizel" };
-            carManager.Add(c);
-            foreach (var item in carManager.GetAll())
+            RentalTest();
+
+            Console.ReadKey();
+        }
+
+        private static void RentalTest()
+        {
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+
+
+
+
+            var rental = new Rental { CarId = 4, CustomerId = 2, RentDate = DateTime.Now };
+            var state = rentalManager.Add(rental);
+
+            if (state.Success == true)
             {
-                Console.WriteLine(item.BrandId);
+
+                Console.WriteLine("eklendi");
+
             }
 
+            else
+            {
+                Console.WriteLine(state.Message);
+            }
+        }
+
+        private static void CarList()
+        {
+            CarManager carManager = new CarManager(new EfCarDal());
+
+
+            var result = carManager.GetCarDetails();
+            if (result.Success == true)
+            {
+                foreach (var item in result.Data)
+                {
+                    Console.WriteLine(item.BrandName);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
         }
     }
 }
